@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newApplicationBtn = document.getElementById('new-application-dropdown-btn');
     const newApplicationMenu = document.getElementById('new-application-dropdown-menu');
     
-    const API_URL = 'https://lgu-helpdesk-api.onrender.com/api/applications';
+    const API_URL = 'https://lgu-building-permit.onrender.com/api/applications';
 
     /**
      * Renders the status pill based on the application status text.
