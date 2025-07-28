@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             // --- Populate all form fields ---
+            setValue('permitNo', app.permitNo);
             setValue('applicationStatus', app.status);
             setRadio('applicationType', app.applicationType);
             setRadio('permitType', app.permitType);

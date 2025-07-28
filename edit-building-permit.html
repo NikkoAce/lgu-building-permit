@@ -49,17 +49,23 @@
 
             <form id="editApplicationForm" class="hidden">
                                <!-- UPDATED: Added Application Status section -->
-                <section class="form-section">
-                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Application Status</h3></div>
-                    <div class="form-section-body">
-                        <label for="applicationStatus" class="block text-sm mb-1">Update Status</label>
-                        <select id="applicationStatus" name="status" class="input-field bg-white">
-                            <option value="For Evaluation">For Evaluation</option>
-                            <option value="For Inspection">For Inspection</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Permit Released">Permit Released</option>
-                            <option value="Rejected">Rejected</option>
-                        </select>
+       <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Permit Details</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="permitNo" class="block text-sm mb-1">Application No.</label>
+                            <input type="text" id="permitNo" name="permitNo" class="input-field">
+                        </div>
+                        <div>
+                            <label for="applicationStatus" class="block text-sm mb-1">Application Status</label>
+                            <select id="applicationStatus" name="status" class="input-field bg-white">
+                                <option value="For Evaluation">For Evaluation</option>
+                                <option value="For Inspection">For Inspection</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Permit Released">Permit Released</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
                     </div>
                 </section>
                 <!-- Top Level Info -->
