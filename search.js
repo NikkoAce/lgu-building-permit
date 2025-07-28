@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-btn');
     const pageInfo = document.getElementById('page-info');
 
-    const API_URL = 'https://lgu-helpdesk-api.onrender.com/api/applications';
+    const API_URL = 'https://lgu-building-permit.onrender.com/api/applications';
     let debounceTimer;
     let currentPage = 1;
     let totalPages = 1;

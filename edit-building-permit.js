@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const API_URL = `https://lgu-helpdesk-api.onrender.com/api/applications/${applicationId}`;
+    const API_URL = `https://lgu-building-permit.onrender.com/api/applications/${applicationId}`;
 
     /**
      * Fetches existing data and populates the form fields.

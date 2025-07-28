@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const API_URL = `https://lgu-helpdesk-api.onrender.com/api/applications/${applicationId}`;
+    const API_URL = `https://lgu-building-permit.onrender.com/api/applications/${applicationId}`;
 
     const fetchAndDisplayApplication = async () => {
         try {
@@ -165,7 +165,7 @@ async function exportToWord() {
             return;
         }
 
-        const reportUrl = `https://lgu-helpdesk-api.onrender.com/api/applications/${applicationId}/report`;
+        const reportUrl = `https://lgu-building-permit.onrender.com/api/applications/${applicationId}/report`;
         
         try {
             const response = await fetch(reportUrl, {

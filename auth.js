@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const showLoginBtn = document.getElementById('show-login-btn');
 
     // --- API URLs ---
-    const REGISTER_URL = 'https://lgu-helpdesk-api.onrender.com/api/auth/register';
-    const LOGIN_URL = 'https://lgu-helpdesk-api.onrender.com/api/auth/login';
+    const REGISTER_URL = 'https://lgu-building-permit.onrender.com/api/auth/register';
+    const LOGIN_URL = 'https://lgu-building-permit.onrender.com/api/auth/login';
 
     // --- Event Listeners to Toggle Views ---
     showRegisterBtn.addEventListener('click', () => {

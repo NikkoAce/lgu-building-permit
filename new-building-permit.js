@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveBtn = document.getElementById('saveBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     
-    const API_URL = 'https://lgu-helpdesk-api.onrender.com/api/applications';
+    const API_URL = 'https://lgu-building-permit.onrender.com/api/applications';
 
     if (saveBtn) {
         saveBtn.addEventListener('click', async (event) => {
