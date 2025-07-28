@@ -16,6 +16,7 @@
     "cors": "^2.8.5",
     "docx-templates": "^4.14.1",
     "docxtemplater": "^3.65.2",
+    "dotenv": "^17.2.1",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.4",

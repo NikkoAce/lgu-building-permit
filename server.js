@@ -1,6 +1,7 @@
 // server.js
 
 // --- IMPORTS ---
+require('dotenv').config(); 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -11,20 +12,21 @@ const Docxtemplater = require('docxtemplater');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+
 // --- DEBUGGING LOG ---
 console.log("--- Server file version: 8.0 (JWT Integration) ---");
 
 // --- INITIALIZATION ---
 const app = express();
 const PORT = process.env.PORT || 3001;
-const JWT_SECRET = 'your_super_secret_key_change_this_later';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // --- MIDDLEWARE ---
 app.use(cors());
 app.use(express.json());
 
 // --- MONGODB CONNECTION ---
-const MONGO_URI = 'mongodb+srv://admin123:admin123@cluster0.pwhiz83.mongodb.net/lgu-permit-db?retryWrites=true&w=majority&appName=Cluster0'; 
+const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
 .then(() => console.log('Successfully connected to MongoDB.'))
 .catch(err => console.error('Connection error', err));
