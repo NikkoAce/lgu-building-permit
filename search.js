@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td class="p-4 text-sm text-gray-500">${formattedDate}</td>
                         <td class="p-4 text-sm">${getStatusPill(app.status)}</td>
                         <td class="p-4 text-sm">
-                            <a href="application-details.html?id=${app._id}" class="text-blue-600 hover:text-blue-800 mr-2" title="View Details"><i class="fas fa-eye"></i></a>
-                            <a href="edit-application.html?id=${app._id}" class="text-green-600 hover:text-green-800" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                            <a href="building-permit-details.html?id=${app._id}" class="text-blue-600 hover:text-blue-800 mr-2" title="View Details"><i class="fas fa-eye"></i></a>
+                            <a href="edit-building-permit.html?id=${app._id}" class="text-green-600 hover:text-green-800" title="Edit"><i class="fas fa-pencil-alt"></i></a>
                         </td>
                     </tr>
                 `;
