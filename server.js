@@ -24,7 +24,7 @@ app.use(cors());
 app.use(express.json());
 
 // --- MONGODB CONNECTION ---
-const MONGO_URI = 'mongodb://localhost:27017/lguPermitSystem';
+const MONGO_URI = 'mongodb+srv://admin123:admin123@cluster0.pwhiz83.mongodb.net/lgu-permit-db?retryWrites=true&w=majority&appName=Cluster0'; 
 mongoose.connect(MONGO_URI)
 .then(() => console.log('Successfully connected to MongoDB.'))
 .catch(err => console.error('Connection error', err));

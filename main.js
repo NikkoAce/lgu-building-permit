@@ -9,7 +9,7 @@
 const authToken = localStorage.getItem('authToken');
 if (!authToken) {
     // If no token is found, redirect the user to the login page.
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 /**
@@ -17,7 +17,7 @@ if (!authToken) {
  */
 function logout() {
     localStorage.removeItem('authToken');
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 /**
