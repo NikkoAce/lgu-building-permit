@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daet Building Permit Portal - Official Website</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Use the Inter font family */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom gradient for the hero section */
+        .hero-gradient {
+            background: linear-gradient(90deg, rgba(2,0,36,0.7) 0%, rgba(9,9,121,0.6) 35%, rgba(0,212,255,0.5) 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="https://placehold.co/40x40/003366/FFFFFF?text=LGU" alt="LGU Daet Logo" class="h-10 w-10 rounded-full">
+                <h1 class="text-xl font-bold text-gray-800">Daet Building Permit Portal</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-600 hover:text-blue-600 font-medium">Home</a>
+                <a href="#requirements" class="text-gray-600 hover:text-blue-600 font-medium">Requirements</a>
+                <a href="#track" class="text-gray-600 hover:text-blue-600 font-medium">Track Application</a>
+                <a href="#faq" class="text-gray-600 hover:text-blue-600 font-medium">FAQ</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-600 font-medium">Contact Us</a>
+            </nav>
+            <button class="md:hidden">
+                <i class="fas fa-bars text-2xl text-gray-600"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="relative text-white min-h-[60vh] flex items-center">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://placehold.co/1600x900/EFEFEF/AAAAAA?text=Daet+Municipal+Hall');"></div>
+            <div class="absolute inset-0 hero-gradient"></div>
+            <div class="relative container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-4">Daet Building Permit Portal</h2>
+                <p class="text-xl md:text-2xl font-light mb-8">Build with confidence. Apply, track, and manage your permits online.</p>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <a href="new-application.html" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105">
+                        <i class="fas fa-file-alt mr-2"></i>Apply for a Permit Now
+                    </a>
+                    <a href="#track" class="w-full sm:w-auto bg-white/30 backdrop-blur-sm hover:bg-white/50 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300">
+                        <i class="fas fa-search mr-2"></i>Check Application Status
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Permit Types Section -->
+        <section id="requirements" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">Streamlined Permit Processing</h3>
+                    <p class="text-lg text-gray-600 mt-2">Find all the information you need for various permit types.</p>
+                </div>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1: New Construction -->
+                    <div class="bg-gray-50 rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-hard-hat fa-3x"></i></div>
+                        <h4 class="text-xl font-bold mb-2">New Construction</h4>
+                        <p class="text-gray-600 mb-4">For all new buildings and structures from the ground up.</p>
+                        <a href="#" class="text-blue-600 hover:underline font-semibold">View Requirements <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                    <!-- Card 2: Renovation/Alteration -->
+                    <div class="bg-gray-50 rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-tools fa-3x"></i></div>
+                        <h4 class="text-xl font-bold mb-2">Renovation & Alteration</h4>
+                        <p class="text-gray-600 mb-4">For any changes, additions, or modifications to existing structures.</p>
+                        <a href="#" class="text-blue-600 hover:underline font-semibold">View Requirements <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                    <!-- Card 3: Demolition -->
+                    <div class="bg-gray-50 rounded-lg shadow-md p-8 hover:shadow-xl transition-shadow duration-300">
+                        <div class="text-blue-600 mb-4"><i class="fas fa-crane fa-3x"></i></div>
+                        <h4 class="text-xl font-bold mb-2">Demolition</h4>
+                        <p class="text-gray-600 mb-4">Permits for the complete or partial dismantling of a structure.</p>
+                        <a href="#" class="text-blue-600 hover:underline font-semibold">View Requirements <i class="fas fa-arrow-right ml-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Application Status Tracker Section -->
+        <section id="track" class="py-16 bg-gray-100">
+            <div class="container mx-auto px-6">
+                 <div class="bg-white rounded-lg shadow-lg p-8 md:p-12 flex flex-col md:flex-row items-center gap-8">
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 class="text-3xl font-bold text-gray-800">Track Your Application</h3>
+                        <p class="text-lg text-gray-600 mt-2">Enter your Application Reference Number to see the latest updates.</p>
+                    </div>
+                    <div class="w-full flex-1">
+                        <form class="flex flex-col sm:flex-row gap-2">
+                            <input type="text" placeholder="Enter Reference Number (e.g., 2025-1234)" class="w-full flex-grow px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md transition duration-300">
+                                Track Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News & Announcements Section -->
+        <section id="news" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-gray-800">News & Announcements</h3>
+                    <p class="text-lg text-gray-600 mt-2">Stay updated with the latest from the Office of the Building Official.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Announcement 1 -->
+                    <div class="bg-gray-50 rounded-lg p-6 flex items-start space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full flex-shrink-0">
+                           <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">July 24, 2025</p>
+                            <h4 class="font-semibold text-lg mt-1">Updated Schedule of Fees for 2025</h4>
+                            <p class="text-gray-600 mt-2">Please be advised of the newly updated schedule of fees effective August 1, 2025. Click to learn more.</p>
+                        </div>
+                    </div>
+                    <!-- Announcement 2 -->
+                    <div class="bg-gray-50 rounded-lg p-6 flex items-start space-x-4">
+                        <div class="bg-blue-100 text-blue-600 p-3 rounded-full flex-shrink-0">
+                           <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">July 15, 2025</p>
+                            <h4 class="font-semibold text-lg mt-1">System Maintenance on July 30</h4>
+                            <p class="text-gray-600 mt-2">The portal will be temporarily unavailable from 10 PM to 11 PM on July 30 for scheduled maintenance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-800 text-white">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-lg font-bold mb-4">About</h4>
+                    <p class="text-gray-400">This is the official portal for building permit applications for the LGU of Daet, Camarines Norte. Our goal is to provide a transparent and efficient service.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Downloadable Forms</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Contact Us</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt w-5 mt-1"></i><span>Office of the Building Official, Municipal Hall, Daet, Camarines Norte</span></li>
+                        <li class="flex items-center"><i class="fas fa-phone w-5"></i><span>(054) 123-4567</sp

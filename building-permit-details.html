@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Details - LGU Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .detail-section { background-color: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); margin-bottom: 2rem; }
+        .detail-section-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb; display: flex; justify-content: space-between; align-items: center; }
+        .detail-section-body { padding: 1.5rem; }
+        .detail-item { margin-bottom: 1rem; }
+        .detail-label { font-size: 0.875rem; font-weight: 500; color: #6b7280; }
+        .detail-value { font-size: 1rem; font-weight: 600; color: #1f2937; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md flex flex-col">
+            <div class="p-6 text-center border-b"><h1 class="text-xl font-bold text-gray-700">LGU Daet</h1><p class="text-sm text-gray-500">Building Permit System</p></div>
+            <nav class="flex-1 px-4 py-4 space-y-2"><a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg"><i class="fas fa-tachometer-alt w-6"></i><span>Dashboard</span></a></nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-8 overflow-y-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Application Details</h2>
+                <div>
+                    <button id="exportWordBtn" class="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded-lg shadow-md mr-2 hidden">
+                        <i class="fas fa-file-word mr-2"></i>
+                        Export to Word
+                    </button>
+                    <a href="dashboard.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <div id="loadingState" class="text-center p-12">
+                <i class="fas fa-spinner fa-spin fa-3x text-blue-500"></i>
+                <p class="mt-4 text-gray-600">Loading Application Data...</p>
+            </div>
+
+            <div id="applicationData" class="hidden">
+                <!-- General Info -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">General Information</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+                        <div class="detail-item"><p class="detail-label">Permit No.</p><p id="detail-permitNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Status</p><p id="detail-status" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Date Filed</p><p id="detail-dateFiled" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Application Type</p><p id="detail-applicationType" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Permit Type</p><p id="detail-permitType" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Box 1: Applicant Information -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 1: Owner/Applicant Information</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <div class="detail-item"><p class="detail-label">Full Name</p><p id="detail-applicantName" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">TIN</p><p id="detail-applicantTIN" class="detail-value"></p></div>
+                        <div class="detail-item md:col-span-2"><p class="detail-label">Address</p><p id="detail-applicantAddress" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Contact No.</p><p id="detail-applicantContactNo" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Location of Construction -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Location of Construction</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4">
+                        <div class="detail-item md:col-span-4"><p class="detail-label">Full Address</p><p id="detail-location" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Lot No.</p><p id="detail-lotNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Blk No.</p><p id="detail-blkNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">TCT No.</p><p id="detail-tctNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Tax Dec. No.</p><p id="detail-taxDecNo" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Scope, Use, and Project Details -->
+                <section class="detail-section">
+                     <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Scope, Use, and Project Details</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
+                        <div class="detail-item lg:col-span-2"><p class="detail-label">Scope of Work</p><p id="detail-scopeOfWork" class="detail-value"></p></div>
+                        <div class="detail-item lg:col-span-2"><p class="detail-label">Use or Character of Occupancy</p><p id="detail-characterOfOccupancy" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Number of Units</p><p id="detail-numberOfUnits" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Number of Storey</p><p id="detail-numberOfStorey" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Total Floor Area (sq. m.)</p><p id="detail-totalFloorArea" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Lot Area (sq. m.)</p><p id="detail-lotArea" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Proposed Construction Date</p><p id="detail-proposedDate" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Expected Completion Date</p><p id="detail-expectedDate" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Box 2: Full-Time Inspector -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 2: Full-Time Inspector/Supervisor</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-4">
+                        <div class="detail-item md:col-span-3"><p class="detail-label">Name</p><p id="detail-inspector-name" class="detail-value"></p></div>
+                        <div class="detail-item md:col-span-3"><p class="detail-label">Address</p><p id="detail-inspector-address" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">PRC No.</p><p id="detail-inspector-prcNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">PTR No.</p><p id="detail-inspector-ptrNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">TIN</p><p id="detail-inspector-tin" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Box 3 & 4: Signatory Details -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 3 & 4: Signatory ID Details</h3></div>
+                    <div class="detail-section-body space-y-6">
+                        <div>
+                            <h4 class="font-medium text-gray-600 mb-2">Applicant</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="detail-item"><p class="detail-label">Gov't Issued ID No.</p><p id="detail-applicantSig-id" class="detail-value"></p></div>
+                                <div class="detail-item"><p class="detail-label">Date Issued</p><p id="detail-applicantSig-date" class="detail-value"></p></div>
+                                <div class="detail-item"><p class="detail-label">Place Issued</p><p id="detail-applicantSig-place" class="detail-value"></p></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-600 mb-2">Lot Owner</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div class="detail-item md:col-span-4"><p class="detail-label">Name</p><p id="detail-lotOwner-name" class="detail-value"></p></div>
+                                <div class="detail-item"><p class="detail-label">Gov't Issued ID No.</p><p id="detail-lotOwner-id" class="detail-value"></p></div>
+                                <div class="detail-item"><p class="detail-label">Date Issued</p><p id="detail-lotOwner-date" class="detail-value"></p></div>
+                                <div class="detail-item"><p class="detail-label">Place Issued</p><p id="detail-lotOwner-place" class="detail-value"></p></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Box 5: Notary Details -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 5: Notary Information</h3></div>
+                    <div class="detail-section-body grid grid-cols-1 md:grid-cols-4 gap-x-6 gap-y-4">
+                        <div class="detail-item"><p class="detail-label">Doc. No.</p><p id="detail-notary-docNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Page No.</p><p id="detail-notary-pageNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Book No.</p><p id="detail-notary-bookNo" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Series Of</p><p id="detail-notary-seriesOf" class="detail-value"></p></div>
+                        <div class="detail-item md:col-span-4"><p class="detail-label">Notary Public</p><p id="detail-notary-name" class="detail-value"></p></div>
+                    </div>
+                </section>
+
+                <!-- Box 6: Assessed Fees -->
+                <section class="detail-section">
+                    <div class="detail-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 6: Assessed Fees</h3></div>
+                    <div class="detail-section-body grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4">
+                        <div class="detail-item"><p class="detail-label">Zoning</p><p id="detail-fee-zoning" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Filing Fee</p><p id="detail-fee-filing" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Line and Grade</p><p id="detail-fee-lineGrade" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Fencing</p><p id="detail-fee-fencing" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Architectural</p><p id="detail-fee-architectural" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Civil/Structural</p><p id="detail-fee-civil" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Electrical</p><p id="detail-fee-electrical" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Mechanical</p><p id="detail-fee-mechanical" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Sanitary</p><p id="detail-fee-sanitary" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Plumbing</p><p id="detail-fee-plumbing" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Electronics</p><p id="detail-fee-electronics" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Interior</p><p id="detail-fee-interior" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Surcharges</p><p id="detail-fee-surcharges" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Penalties</p><p id="detail-fee-penalties" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Fire Code Tax</p><p id="detail-fee-fireCode" class="detail-value"></p></div>
+                        <div class="detail-item"><p class="detail-label">Hotworks</p><p id="detail-fee-hotworks" class="detail-value"></p></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js" defer></script>
+    <script src="building-permit-details.js" defer></script>
+</body>
+</html>

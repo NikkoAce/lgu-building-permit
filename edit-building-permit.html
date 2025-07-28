@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Building Permit Application - LGU Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .form-section { background-color: white; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); margin-bottom: 2rem; }
+        .form-section-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb; }
+        .form-section-body { padding: 1.5rem; }
+        label { font-weight: 500; color: #374151; }
+        .input-field { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; transition: border-color 0.2s; }
+        .input-field:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 1px #2563eb; }
+        .occupancy-group { margin-bottom: 1rem; }
+        .occupancy-group h4 { font-weight: 600; color: #1f2937; margin-bottom: 0.5rem; }
+        .occupancy-option { display: flex; align-items: center; margin-bottom: 0.25rem; }
+         #map { height: 400px; border-radius: 0.5rem; border: 1px solid #d1d5db; margin-top: 1rem; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-md flex flex-col">
+            <div class="p-6 text-center border-b"><h1 class="text-xl font-bold text-gray-700">LGU Daet</h1><p class="text-sm text-gray-500">Building Permit System</p></div>
+            <nav class="flex-1 px-4 py-4 space-y-2"><a href="dashboard.html" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-200 rounded-lg"><i class="fas fa-tachometer-alt w-6"></i><span>Dashboard</span></a></nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-8 overflow-y-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Edit Application</h2>
+                <div>
+                     <button id="cancelBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">Cancel</button>
+                    <button id="saveChangesBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"><i class="fas fa-save mr-2"></i>Save Changes</button>
+                </div>
+            </div>
+
+            <div id="loadingState" class="text-center p-12">
+                <i class="fas fa-spinner fa-spin fa-3x text-blue-500"></i>
+                <p class="mt-4 text-gray-600">Loading Application Data...</p>
+            </div>
+
+            <form id="editApplicationForm" class="hidden">
+                               <!-- UPDATED: Added Application Status section -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Application Status</h3></div>
+                    <div class="form-section-body">
+                        <label for="applicationStatus" class="block text-sm mb-1">Update Status</label>
+                        <select id="applicationStatus" name="status" class="input-field bg-white">
+                            <option value="For Evaluation">For Evaluation</option>
+                            <option value="For Inspection">For Inspection</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Permit Released">Permit Released</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                </section>
+                <!-- Top Level Info -->
+                <section class="form-section">
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div><label class="block text-sm mb-2">Application Type</label><div class="flex space-x-4"><label class="flex items-center"><input type="radio" name="applicationType" value="Simple" class="mr-2">Simple</label><label class="flex items-center"><input type="radio" name="applicationType" value="Complex" class="mr-2">Complex</label></div></div>
+                        <div><label class="block text-sm mb-2">Permit Type</label><div class="flex space-x-4"><label class="flex items-center"><input type="radio" name="permitType" value="New" class="mr-2">New</label><label class="flex items-center"><input type="radio" name="permitType" value="Renewal" class="mr-2">Renewal</label><label class="flex items-center"><input type="radio" name="permitType" value="Amendatory" class="mr-2">Amendatory</label></div></div>
+                        <div><label class="block text-sm mb-2">Also Applies For</label><div class="flex space-x-4"><label class="flex items-center"><input type="checkbox" id="locationalClearance" class="mr-2">Locational Clearance</label><label class="flex items-center"><input type="checkbox" id="fireSafetyClearance" class="mr-2">Fire Safety</label></div></div>
+                    </div>
+                </section>
+
+                <!-- Applicant Information -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 1: Owner/Applicant Information</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-3"><label for="applicantName" class="block text-sm mb-1">Full Name of Applicant</label><input type="text" id="applicantName" class="input-field" placeholder="Last Name, First Name, M.I."></div>
+                        <div><label for="applicantTIN" class="block text-sm mb-1">TIN</label><input type="text" id="applicantTIN" class="input-field"></div>
+                        <div class="lg:col-span-2"><label for="applicantAddress" class="block text-sm mb-1">Address</label><input type="text" id="applicantAddress" class="input-field" placeholder="No., Street, Barangay, City/Municipality"></div>
+                        <div><label for="applicantContactNo" class="block text-sm mb-1">Contact No.</label><input type="tel" id="applicantContactNo" class="input-field"></div>
+                    </div>
+                </section>
+
+            <!-- Location of Construction -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Location of Construction</h3></div>
+                    <div class="form-section-body">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-4"><label for="projectLocation" class="block text-sm mb-1">Street, Barangay, City/Municipality</label><input type="text" id="projectLocation" class="input-field"></div>
+                            <div><label for="lotNo" class="block text-sm mb-1">Lot No.</label><input type="text" id="lotNo" class="input-field"></div>
+                            <div><label for="blkNo" class="block text-sm mb-1">Blk No.</label><input type="text" id="blkNo" class="input-field"></div>
+                            <div><label for="tctNo" class="block text-sm mb-1">TCT No.</label><input type="text" id="tctNo" class="input-field"></div>
+                            <div><label for="taxDecNo" class="block text-sm mb-1">Tax Dec. No.</label><input type="text" id="taxDecNo" class="input-field"></div>
+                        </div>
+                        
+                        <!-- UPDATED: Added map container and hidden inputs for coordinates -->
+                        <label class="block text-sm mt-6 mb-1">Pin the Exact Location on the Map</label>
+                        <div id="map"></div>
+                        <input type="hidden" id="latitude">
+                        <input type="hidden" id="longitude">
+                    </div>
+                </section>
+
+                <!-- Scope, Occupancy, and Details -->
+                <section class="form-section">
+                     <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Scope, Use, and Project Details</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                         <div class="lg:col-span-2"><label for="scopeOfWork" class="block text-sm mb-1">Scope of Work</label><select id="scopeOfWork" class="input-field bg-white"><option>New Construction</option><option>Erection</option><option>Addition</option><option>Alteration</option><option>Renovation</option><option>Conversion</option><option>Repair</option><option>Moving</option><option>Raising</option><option>Accessory Building/Structure</option><option>Legalization of Existing Building</option><option>Others</option></select></div>
+                        <div class="lg:col-span-4">
+                            <label class="block text-sm mb-2">Use or Character of Occupancy</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="occupancy-group">
+                                    <h4>Group A: Residential (Dwellings)</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Single Family Dwelling" class="mr-2"> Single Family Dwelling</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Duplex" class="mr-2"> Duplex</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group B: Residential</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Hotel" class="mr-2"> Hotel</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Dormitory" class="mr-2"> Dormitory</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Townhouse" class="mr-2"> Townhouse</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group C: Educational & Recreational</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="School Building" class="mr-2"> School Building</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Civic Center" class="mr-2"> Civic Center</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Clubhouse" class="mr-2"> Clubhouse</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group D: Institutional</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Hospital" class="mr-2"> Hospital</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Home for the Aged" class="mr-2"> Home for the Aged</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Government Office" class="mr-2"> Government Office</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group E: Commercial</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Bank/Store/Shop" class="mr-2"> Bank/Store/Shop</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Shopping Center" class="mr-2"> Shopping Center</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group F, G: Industrial</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Light Industrial" class="mr-2"> Light Industrial</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Medium Industrial" class="mr-2"> Medium Industrial</label>
+                                </div>
+                                <div class="occupancy-group">
+                                    <h4>Group H, I: Assembly</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Assembly (<1000)" class="mr-2"> Assembly (<1000)</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Assembly (>=1000)" class="mr-2"> Assembly (>=1000)</label>
+                                </div>
+                                 <div class="occupancy-group">
+                                    <h4>Group J: Accessory</h4>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Agricultural" class="mr-2"> Agricultural</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Private Garage/Carport" class="mr-2"> Private Garage/Carport</label>
+                                    <label class="occupancy-option"><input type="checkbox" name="characterOfOccupancy" value="Fence/Tower/Pool" class="mr-2"> Fence/Tower/Pool</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div><label for="numberOfUnits" class="block text-sm mb-1">Number of Units</label><input type="number" id="numberOfUnits" class="input-field"></div>
+                        <div><label for="numberOfStorey" class="block text-sm mb-1">Number of Storey</label><input type="number" id="numberOfStorey" class="input-field"></div>
+                        <div><label for="totalFloorArea" class="block text-sm mb-1">Total Floor Area (sq. m.)</label><input type="number" id="totalFloorArea" class="input-field"></div>
+                        <div><label for="lotArea" class="block text-sm mb-1">Lot Area (sq. m.)</label><input type="number" id="lotArea" class="input-field"></div>
+                        <div><label for="proposedDateOfConstruction" class="block text-sm mb-1">Proposed Construction Date</label><input type="date" id="proposedDateOfConstruction" class="input-field"></div>
+                        <div><label for="expectedDateOfCompletion" class="block text-sm mb-1">Expected Completion Date</label><input type="date" id="expectedDateOfCompletion" class="input-field"></div>
+                    </div>
+                </section>
+                
+                <!-- Costings -->
+                <section class="form-section">
+                     <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Estimated Costs (₱)</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div><label for="costBuilding" class="block text-sm mb-1">Building</label><input type="number" id="costBuilding" class="input-field" value="0"></div>
+                        <div><label for="costElectrical" class="block text-sm mb-1">Electrical</label><input type="number" id="costElectrical" class="input-field" value="0"></div>
+                        <div><label for="costMechanical" class="block text-sm mb-1">Mechanical</label><input type="number" id="costMechanical" class="input-field" value="0"></div>
+                        <div><label for="costElectronics" class="block text-sm mb-1">Electronics</label><input type="number" id="costElectronics" class="input-field" value="0"></div>
+                        <div><label for="costPlumbing" class="block text-sm mb-1">Plumbing</label><input type="number" id="costPlumbing" class="input-field" value="0"></div>
+                        <div><label for="costOthers" class="block text-sm mb-1">Others</label><input type="number" id="costOthers" class="input-field" value="0"></div>
+                        <div class="lg:col-span-2"><label for="costEquipment" class="block text-sm mb-1">Cost of Equipment Installed</label><input type="number" id="costEquipment" class="input-field" value="0"></div>
+                    </div>
+                </section>
+
+                <!-- Inspector Details -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 2: Full-Time Inspector/Supervisor of Construction Works</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-3"><label for="inspectorName" class="block text-sm mb-1">Architect or Civil Engineer</label><input type="text" id="inspectorName" class="input-field" placeholder="Signed and Sealed Over Printed Name"></div>
+                        <div class="lg:col-span-3"><label for="inspectorAddress" class="block text-sm mb-1">Address</label><input type="text" id="inspectorAddress" class="input-field"></div>
+                        <div><label for="inspectorPrcNo" class="block text-sm mb-1">PRC No.</label><input type="text" id="inspectorPrcNo" class="input-field"></div>
+                        <div><label for="inspectorPtrNo" class="block text-sm mb-1">PTR No.</label><input type="text" id="inspectorPtrNo" class="input-field"></div>
+                        <div><label for="inspectorIssuedAt" class="block text-sm mb-1">Issued At</label><input type="text" id="inspectorIssuedAt" class="input-field"></div>
+                        <div><label for="inspectorValidity" class="block text-sm mb-1">Validity</label><input type="text" id="inspectorValidity" class="input-field"></div>
+                        <div><label for="inspectorDateIssued" class="block text-sm mb-1">Date Issued</label><input type="text" id="inspectorDateIssued" class="input-field"></div>
+                        <div><label for="inspectorTin" class="block text-sm mb-1">TIN</label><input type="text" id="inspectorTin" class="input-field"></div>
+                    </div>
+                </section>
+
+                <!-- Notary Details -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 5: Notary Information</h3></div>
+                    <div class="form-section-body grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div><label for="notaryDocNo" class="block text-sm mb-1">Doc. No.</label><input type="text" id="notaryDocNo" class="input-field"></div>
+                        <div><label for="notaryPageNo" class="block text-sm mb-1">Page No.</label><input type="text" id="notaryPageNo" class="input-field"></div>
+                        <div><label for="notaryBookNo" class="block text-sm mb-1">Book No.</label><input type="text" id="notaryBookNo" class="input-field"></div>
+                        <div><label for="notarySeriesOf" class="block text-sm mb-1">Series Of</label><input type="text" id="notarySeriesOf" class="input-field"></div>
+                        <div class="lg:col-span-4"><label for="notaryPublic" class="block text-sm mb-1">Notary Public Name</label><input type="text" id="notaryPublic" class="input-field"></div>
+                    </div>
+                </section>
+
+                <!-- Box 3 & 4: Signatory Details -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 3 & 4: Signatory ID Details</h3></div>
+                    <div class="form-section-body space-y-6">
+                        <div>
+                            <h4 class="font-medium text-gray-600 mb-2">Applicant</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div><label for="applicantGovId" class="block text-sm mb-1">Gov't Issued ID No.</label><input type="text" id="applicantGovId" class="input-field"></div>
+                                <div><label for="applicantIdDate" class="block text-sm mb-1">Date Issued</label><input type="text" id="applicantIdDate" class="input-field"></div>
+                                <div><label for="applicantIdPlace" class="block text-sm mb-1">Place Issued</label><input type="text" id="applicantIdPlace" class="input-field"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-600 mb-2">Lot Owner (if different from applicant)</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                <div class="md:col-span-4"><label for="lotOwnerName" class="block text-sm mb-1">Lot Owner Name</label><input type="text" id="lotOwnerName" class="input-field"></div>
+                                <div><label for="lotOwnerGovId" class="block text-sm mb-1">Gov't Issued ID No.</label><input type="text" id="lotOwnerGovId" class="input-field"></div>
+                                <div><label for="lotOwnerIdDate" class="block text-sm mb-1">Date Issued</label><input type="text" id="lotOwnerIdDate" class="input-field"></div>
+                                <div><label for="lotOwnerIdPlace" class="block text-sm mb-1">Place Issued</label><input type="text" id="lotOwnerIdPlace" class="input-field"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Box 6: Assessed Fees -->
+                <section class="form-section">
+                    <div class="form-section-header"><h3 class="text-lg font-semibold text-gray-700">Box 6: Assessed Fees (₱)</h3></div>
+                    <div class="form-section-body grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-4">
+                        <div><label for="feeZoning" class="block text-sm mb-1">Zoning</label><input type="number" id="feeZoning" class="input-field" value="0"></div>
+                        <div><label for="feeFiling" class="block text-sm mb-1">Filing Fee</label><input type="number" id="feeFiling" class="input-field" value="0"></div>
+                        <div><label for="feeLineGrade" class="block text-sm mb-1">Line and Grade</label><input type="number" id="feeLineGrade" class="input-field" value="0"></div>
+                        <div><label for="feeFencing" class="block text-sm mb-1">Fencing</label><input type="number" id="feeFencing" class="input-field" value="0"></div>
+                        <div><label for="feeArchitectural" class="block text-sm mb-1">Architectural</label><input type="number" id="feeArchitectural" class="input-field" value="0"></div>
+                        <div><label for="feeCivil" class="block text-sm mb-1">Civil/Structural</label><input type="number" id="feeCivil" class="input-field" value="0"></div>
+                        <div><label for="feeElectrical" class="block text-sm mb-1">Electrical</label><input type="number" id="feeElectrical" class="input-field" value="0"></div>
+                        <div><label for="feeMechanical" class="block text-sm mb-1">Mechanical</label><input type="number" id="feeMechanical" class="input-field" value="0"></div>
+                        <div><label for="feeSanitary" class="block text-sm mb-1">Sanitary</label><input type="number" id="feeSanitary" class="input-field" value="0"></div>
+                        <div><label for="feePlumbing" class="block text-sm mb-1">Plumbing</label><input type="number" id="feePlumbing" class="input-field" value="0"></div>
+                        <div><label for="feeElectronics" class="block text-sm mb-1">Electronics</label><input type="number" id="feeElectronics" class="input-field" value="0"></div>
+                        <div><label for="feeInterior" class="block text-sm mb-1">Interior</label><input type="number" id="feeInterior" class="input-field" value="0"></div>
+                        <div><label for="feeSurcharges" class="block text-sm mb-1">Surcharges</label><input type="number" id="feeSurcharges" class="input-field" value="0"></div>
+                        <div><label for="feePenalties" class="block text-sm mb-1">Penalties</label><input type="number" id="feePenalties" class="input-field" value="0"></div>
+                        <div class="font-bold pt-6">BFP Fees:</div>
+                        <div><label for="feeFireCodeTax" class="block text-sm mb-1">Fire Code Tax</label><input type="number" id="feeFireCodeTax" class="input-field" value="0"></div>
+                        <div><label for="feeHotworks" class="block text-sm mb-1">Hotworks</label><input type="number" id="feeHotworks" class="input-field" value="0"></div>
+                    </div>
+                </section>
+            </form>
+        </main>
+    </div>
+
+    <script src="main.js" defer></script>
+    <script src="edit-building-permit.js" defer></script>
+</body>
+</html>
